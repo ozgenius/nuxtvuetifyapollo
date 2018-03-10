@@ -1,4 +1,4 @@
-# vue.sk
+# nuxt, vuetify and apollo
 
 > Nuxt.js project
 
