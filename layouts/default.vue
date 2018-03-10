@@ -1,114 +1,100 @@
 <template>
-  <div>
-    <div class="header">
-      <router-link class="header__logo" to="/">
-        <span>Vue.sk</span>
-      </router-link>
-      <search></search>
-      <div class="header__menu">
-        <router-link class="link" :to="{ name: 'index' }" exact>
-          Create snippet
-        </router-link>
-        <router-link class="link" :to="{ name: 'popular' }">
-          Popular snippets
-        </router-link>
-        <router-link class="link" :to="{ name: 'pinned' }">
-          Pinned snippets
-        </router-link>
-        <span class="spacer"></span>
-        <a class="link" href="https://nuxtjs.org">
-          Nuxt.js
-        </a>
-        <a class="link" href="https://vuejs.org">
-          Vue.js
-        </a>
-      </div>
-    </div>
-
-    <section class="main">
-      <div class="main__content">
-        <nuxt/>
-      </div>
-      <div class="main__panel">
-        <panel></panel>
-      </div>
-    </section>
-  </div>
+  <v-app primary>
+    <v-navigation-drawer
+      :mini-variant.sync="miniVariant"
+      :clipped="clipped"
+      v-model="drawer"
+      fixed
+      app
+    >
+      <v-list>
+        <v-list-tile
+          router
+          :to="item.to"
+          :key="i"
+          v-for="(item, i) in items"
+          exact
+        >
+          <v-list-tile-action>
+            <v-icon v-html="item.icon"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-toolbar fixed app :clipped-left="clipped">
+      <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+      <v-btn
+        icon
+        @click.stop="miniVariant = !miniVariant"
+      >
+        <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        @click.stop="clipped = !clipped"
+      >
+        <v-icon>web</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        @click.stop="fixed = !fixed"
+      >
+        <v-icon>remove</v-icon>
+      </v-btn>
+      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        @click.stop="rightDrawer = !rightDrawer"
+      >
+        <v-icon>menu</v-icon>
+      </v-btn>
+    </v-toolbar>
+    <v-content>
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
+    <v-navigation-drawer
+      temporary
+      :right="right"
+      v-model="rightDrawer"
+      fixed
+    >
+      <v-list>
+        <v-list-tile @click.native="right = !right">
+          <v-list-tile-action>
+            <v-icon light>compare_arrows</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+    <v-footer :fixed="fixed" app>
+      <span>&copy; 2017</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-import Panel from '~/components/Panel.vue'
-import Search from '~/components/Search.vue'
-
-export default {
-  components: {
-    Panel,
-    Search
+  export default {
+    data () {
+      return {
+        clipped: false,
+        drawer: true,
+        fixed: false,
+        items: [
+          { icon: 'apps', title: 'Welcome', to: '/' },
+          { icon: 'bubble_chart', title: 'Inspire', to: '/inspire' }
+        ],
+        miniVariant: false,
+        right: true,
+        rightDrawer: false,
+        title: 'Vuetify.js'
+      }
+    }
   }
-}
 </script>
-
-<style lang="scss">
-@import 'assets/variables.scss';
-
-.main {
-  width: 100%;
-  min-height: calc(100vh - 60px);
-  display: flex;
-  &__content {
-    padding: 16px;
-    flex: 1;
-  }
-  &__panel {
-    width: 300px;
-    min-height: 100%;
-    background: #F3F3F3;
-  }
-}
-
-.header {
-  background-color: #fff;
-  height: 60px;
-  padding: 10px 16px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-  border-bottom: 1px solid #eee;
-  &__menu {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    .spacer {
-      width: 1px;
-      height: 30px;
-      margin: 16px;
-      background: #eee;
-    }
-    .link {
-      padding: 16px;
-      color: $link;
-      &:hover {
-        color: $linkHover;
-      }
-      &.nuxt-link-active {
-        color: darken($primary, 3%);
-      }
-    }
-  }
-  &__logo {
-    display: inline-block;
-    font-size: 1.5em;
-    color: #2c3e50;
-    font-family: 'Dosis', 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
-    font-weight: 500;
-  }
-}
-
-.page-enter-active, .page-leave-active {
-  transition: all .2s;
-}
-.page-enter {
-  opacity:   0;
-}
-</style>

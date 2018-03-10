@@ -15,8 +15,8 @@ module.exports = {
   },
   css: [
     {
-      src: '~/assets/app.scss',
-      lang: 'scss'
+      src: '~/assets/style/app.styl',
+     // lang: 'stylus'
     },
     {
       src: 'highlight.js/styles/atelier-cave-light.css',
@@ -31,11 +31,12 @@ module.exports = {
   },
   plugins: [
     '~/plugins/filters.js',
-    '~/plugins/mixins.js'
+    '~/plugins/mixins.js',
+    '~/plugins/vuetify.js',
   ],
   modules: ['@nuxtjs/apollo'],
   build: {
-    vendor: ['highlight.js', 'lang-detector'],
+    vendor: ['highlight.js', 'lang-detector', '~/plugins/vuetify.js'],
     extend (config, ctx) {
       if (ctx.isClient) {
         config.module.rules.push({
